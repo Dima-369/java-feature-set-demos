@@ -1,1 +1,1 @@
-# java-feature-set-demos
+Seems that Java is actually quite good after all 🙂
