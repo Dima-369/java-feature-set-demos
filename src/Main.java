@@ -40,6 +40,7 @@ public class Main {
 @MyAnnotation
 class Annotations {
 
+    @SuppressWarnings("unused")
     @MyFieldAnnotation
     int foo = 3;
 
