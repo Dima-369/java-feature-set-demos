@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-//Java Features We Love. [Moved by Java]
-// https://www.youtube.com/watch?v=oNiOUiAS70w
-
 public class Main {
 
     @SuppressWarnings("CommentedOutCode")
@@ -15,12 +12,12 @@ public class Main {
         a.add(3);
         System.out.println(a); // [3]
 
-//        avoid manual cast
-//        if (person instanceof Employee emp) {
-//            if (emp.isBasedInOffice()) {
-//                emp.workFromHome();
-//            }
-//        }
+        //        avoid manual cast
+        //        if (person instanceof Employee emp) {
+        //            if (emp.isBasedInOffice()) {
+        //                emp.workFromHome();
+        //            }
+        //        }
 
         GenericFunctions.demo();
         Printer.demo();
@@ -37,7 +34,7 @@ class Switch {
     public static void demo() {
         System.out.println("--- Switch ---");
         var b = switch (4) {
-            //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
             case 4 -> "I am 4";
 //            case 1 -> 4;
 //            default -> {
