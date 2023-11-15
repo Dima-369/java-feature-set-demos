@@ -19,6 +19,7 @@ public class Main {
         //            }
         //        }
 
+        FunctionPassing.demo();
         GenericFunctions.demo();
         Printer.demo();
         Optionals.demo();
@@ -28,13 +29,36 @@ public class Main {
     }
 }
 
+class FunctionPassing {
+
+    public static void demo() {
+        System.out.println("--- Function Passing ---");
+        // note that this only works when there is one function implementation missing
+        doPrint((s) -> System.out.println("wow" + s));
+
+        // the same as above
+        Printable foo = (s) -> System.out.println("wow" + s);
+        doPrint(foo);
+    }
+
+    public static void doPrint(Printable x) {
+        x.print("!");
+    }
+}
+
+// SAM (single abstract method) interfaces
+@FunctionalInterface
+interface Printable {
+    void print(String suffix);
+}
+
 class Switch {
 
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     public static void demo() {
         System.out.println("--- Switch ---");
         var b = switch (4) {
-        // noinspection DataFlowIssue
+            // noinspection DataFlowIssue
             case 4 -> "I am 4";
 //            case 1 -> 4;
 //            default -> {
@@ -51,7 +75,7 @@ class Switch {
 class Strings {
 
     public static void demo() {
-        System.out.println("-- Strings ---");
+        System.out.println("--- Strings ---");
         String big = "'" + """
                 I am a multi line string. Note that I have a newline at the end!
                  """ + "'";
@@ -77,7 +101,7 @@ class GenericFunctions {
     }
 
     public static void demo() {
-        System.out.println("-- Generic Functions ---");
+        System.out.println("--- Generic Functions ---");
         shout(1, 2); // 1, 2
         printList(List.of(1, 2, 3)); // [1, 2, 3]
         printNumberList(List.of(1, 2)); // [1, 2]
@@ -102,7 +126,7 @@ class Printer<T> {
     }
 
     public static void demo() {
-        System.out.println("-- Generic Printer ---");
+        System.out.println("--- Generic Printer ---");
         (new Printer<>(1)).print();
         final Printer<String> p = new Printer<>("hello?");
         p.print();
@@ -114,7 +138,7 @@ class Printer<T> {
 class Streams {
 
     public static void demo() {
-        System.out.println("-- Streams ---");
+        System.out.println("--- Streams ---");
         var b = Stream.of(1, 2, 3).map(x -> x + 1).toList();
         System.out.println(b); // [2, 3, 4]
 
@@ -128,10 +152,34 @@ class Streams {
     }
 }
 
+/* the class below is the same as this record
+record Cat(int age) {
+}
+*/
+
+@SuppressWarnings("ClassCanBeRecord")
+class Cat {
+
+    private final int age;
+
+    Cat(int age) {
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+
 class Optionals {
 
+    @SuppressWarnings("CommentedOutCode")
     public static void demo() {
-        System.out.println("-- Optionals ---");
+        System.out.println("--- Optionals ---");
+
+        // the main use is for returning things from a function, not inside it to avoid null pointers
+        // do not use .get() - use .orElseThrow() instead
+
         Optional<Boolean> filled = is5OrNot(5);
         Optional<Boolean> nope = is5OrNot(4);
         System.out.println(filled); // Optional[true]
@@ -139,6 +187,13 @@ class Optionals {
 
         System.out.println(filled.isEmpty()); // false
         System.out.println(nope.isPresent()); // false
+
+        System.out.println(nope.orElse(true)); // true
+        // System.out.println(nope.orElseGet(() -> true));
+        // System.out.println(nope.orElseThrow());
+
+        System.out.println(Optional.of(new Cat(3)).map(Cat::getAge)); // Optional[3]
+        System.out.println(Optional.of(new Cat(3)).map(Cat::getAge).orElseThrow()); // 3
 
         Optional.of(300).ifPresent(System.out::println); // 300
         Optional.of(500).ifPresent((x) -> System.out.println(x + 10)); // 510
