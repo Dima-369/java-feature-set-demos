@@ -1,3 +1,10 @@
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,7 +33,103 @@ public class Main {
         Streams.demo();
         Strings.demo();
         Switch.demo();
+        Annotations.demo();
     }
+}
+
+@MyAnnotation
+class Annotations {
+
+    @MyFieldAnnotation
+    int foo = 3;
+
+    public static void demo() {
+        System.out.println("--- Annotations ---");
+
+        Annotations a = new Annotations();
+        if (a.getClass().isAnnotationPresent(MyAnnotation.class)) {
+            System.out.println("Annotations is annotated!");
+        }
+
+        for (Method method : Annotations.class.getMethods()) {
+            if (method.isAnnotationPresent(RunMe.class)) {
+                try {
+                    method.invoke(a);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        for (Method method : Annotations.class.getMethods()) {
+            if (method.isAnnotationPresent(RunMeMultiple.class)) {
+                try {
+                    RunMeMultiple annotation = method.getAnnotation(RunMeMultiple.class);
+                    for (int i = 0; i < annotation.times(); i++) {
+                        method.invoke(a);
+                    }
+
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        for (Field field : Annotations.class.getDeclaredFields()) {
+            if (field.isAnnotationPresent(MyFieldAnnotation.class)) {
+                Object o;
+                try {
+                    o = field.get(a);
+                    if (o instanceof Integer i) {
+                        System.out.println(i + 3); // 6
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @RunMe
+    public void func() {
+        System.out.println("hi from func()");
+    }
+
+    @RunMeMultiple(times = 3)
+    public void func2() {
+        System.out.println("func2() says hi");
+    }
+}
+
+// target only classes and methods
+@Target({ElementType.TYPE, ElementType.METHOD})
+// keep annotation around throughout the entire run time
+@Retention(RetentionPolicy.RUNTIME)
+@interface MyAnnotation {
+
+}
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface RunMe {
+
+}
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface RunMeMultiple {
+    // make parameter mandatory
+    int times();
+    // int times() default 1;
+    // pass array
+    // int[] times();
+}
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface MyFieldAnnotation {
+
 }
 
 class FunctionPassing {
