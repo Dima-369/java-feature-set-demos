@@ -16,3 +16,6 @@ https://www.youtube.com/watch?v=vKVzRbsMnTQ
 
 Annotations In Java Tutorial - How To Create And Use Your Own Custom Annotations
 https://www.youtube.com/watch?v=DkZr7_c9ry8
+
+Records In Java - Full Tutorial - The Best New Java Feature You're Not Using
+https://www.youtube.com/watch?v=gJ9DYC-jswo

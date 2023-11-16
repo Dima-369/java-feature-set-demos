@@ -256,9 +256,25 @@ class Streams {
     }
 }
 
-/* the class below is the same as this record
+/*
+The class below is the same as this record. The fields will be final and private.
+It creates equals(), toString(), hashCode() and public getters like age() - not getAge()
+There will not be an implicit constructor without any arguments.
 record Cat(int age) {
+    // you can add regular and static methods here
+
+    // there can be a compact constructor without the ()
+    public Cat {
+        if (age < 0) {
+            // throw Exception
+        }
+    }
 }
+
+//
+Create exactly the same as a class via:
+Cat cat = new Cat(3);
+var age = cat.age();
 */
 
 @SuppressWarnings("ClassCanBeRecord")
